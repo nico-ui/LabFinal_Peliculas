@@ -95,11 +95,16 @@ public class AccesoDatosImpl implements AccesoDatos {
     @Override
     public void borrar(String nombreArchivo) {
         File archivo = new File(nombreArchivo);
-        if (archivo.delete()) {
+        
+        AccesoDatosImpl fichero = new AccesoDatosImpl();
+
+        if (fichero.existe(nombreArchivo) == true) {
+            archivo.delete();
             System.out.println("El fichero ha sido borrado satisfactoriamente");
         } else {
             System.out.println("El fichero no puede ser borrado");
         }
+
     }
 
 }
