@@ -8,7 +8,14 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public boolean existe(String nombreArchivo) {
-        return true;
+        boolean existe = false;
+        File archivo = new File(nombreArchivo);
+        if (!archivo.exists()) {
+            existe = false;
+        } else {
+            existe = true;
+        }
+        return existe;
     }
 
     @Override
