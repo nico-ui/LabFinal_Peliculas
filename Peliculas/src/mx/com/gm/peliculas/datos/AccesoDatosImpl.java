@@ -8,7 +8,7 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public boolean existe(String nombreArchivo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
@@ -50,7 +50,27 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public String buscar(String nombreArchivo, String buscar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        File archivo = new File(nombreArchivo);
+        String existe = nombreArchivo + "Vacio";
+        try {
+            var entrada = new BufferedReader(new FileReader(archivo));
+            String lectura = entrada.readLine();
+            while (lectura != null) {
+                if (lectura == buscar) {
+                    existe = buscar + " se encuentra en el archivo";
+                } else {
+                    existe = buscar + " no se encuentra en el archivo";
+                }
+                lectura = entrada.readLine();
+            }
+            entrada.close();
+            System.out.println("Fin lectura de archivo");
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace(System.out);
+        } catch (IOException ex) {
+            ex.printStackTrace(System.out);
+        }
+        return existe;
     }
 
     @Override
