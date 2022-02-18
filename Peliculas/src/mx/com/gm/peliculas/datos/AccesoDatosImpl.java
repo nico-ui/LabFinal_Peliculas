@@ -55,13 +55,11 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public void crear(String nombreArchivo) {
-        String ruta = "C:\\catalogoPeliculas\\";
-        ruta = ruta + nombreArchivo;
-        File archivo = new File(ruta);
+        File archivo = new File(nombreArchivo);
         try {
             PrintWriter salida = new PrintWriter(archivo);
             salida.close();
-            System.out.println("Se ha creado el archivo " + ruta + "exitosamente");
+            System.out.println("Se ha creado el archivo " + nombreArchivo);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace(System.out);
         }
@@ -69,7 +67,12 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public void borrar(String nombreArchivo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        File archivo = new File(nombreArchivo);
+        if (archivo.delete()) {
+            System.out.println("El fichero ha sido borrado satisfactoriamente");
+        } else {
+            System.out.println("El fichero no puede ser borrado");
+        }
     }
 
 }
