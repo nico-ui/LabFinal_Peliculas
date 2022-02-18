@@ -1,7 +1,7 @@
 package mx.com.gm.peliculas.datos;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 import mx.com.gm.peliculas.domain.Pelicula;
 
 public class AccesoDatosImpl implements AccesoDatos {
@@ -13,12 +13,14 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public List<String> listar(String nombre) {
+        List<String> peliculas = new ArrayList<>();
         File archivo = new File(nombre);
         try {
             var entrada = new BufferedReader(new FileReader(archivo));
             String lectura = entrada.readLine();
             while (lectura != null) {
-                System.out.println("lectura = " + lectura);
+//                System.out.println("pelicula = " + lectura);
+                peliculas.add(lectura);
                 lectura = entrada.readLine();
             }
             entrada.close();
@@ -28,6 +30,7 @@ public class AccesoDatosImpl implements AccesoDatos {
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
         }
+        return peliculas;
     }
 
     @Override
