@@ -3,6 +3,7 @@ package mx.com.gm.peliculas.datos;
 import java.io.*;
 import java.util.*;
 import mx.com.gm.peliculas.domain.Pelicula;
+import mx.com.gm.peliculas.excepciones.EscrituraDatosEx;
 
 public class AccesoDatosImpl implements AccesoDatos {
 
@@ -42,18 +43,18 @@ public class AccesoDatosImpl implements AccesoDatos {
     }
 
     @Override
-    public void escribir(Pelicula pelicula, String nombreArchivo, boolean anexar) {
-
+    public void escribir(Pelicula pelicula, String nombreArchivo, boolean anexar) throws EscrituraDatosEx {
         AccesoDatosImpl datos = new AccesoDatosImpl();
-        String respuesta = datos.buscar(nombreArchivo, pelicula.getNombre());
-        String existe = pelicula.getNombre() + " se encuentra en el archivo";
-        if (existe.equals(respuesta)) {
-            System.out.println(pelicula.getNombre() + " ya existe, no se puede escribir");
+        boolean fichero = datos.existe(nombreArchivo);
+        if (fichero == false) {
+            throw new EscrituraDatosEx("El archivo " + nombreArchivo + " no existe");
         } else {
-
-            AccesoDatosImpl fichero = new AccesoDatosImpl();
-
-            if (fichero.existe(nombreArchivo) == true) {
+            String respuesta = datos.buscar(nombreArchivo, pelicula.getNombre());
+            String frase = pelicula.getNombre() + " se encuentra en el archivo";
+            if (frase.equals(respuesta)) {
+                throw new EscrituraDatosEx(pelicula.getNombre() + " ya existe, no se puede escribir");
+//            System.out.println(pelicula.getNombre() + " ya existe, no se puede escribir");
+            } else {
                 File archivo = new File(nombreArchivo);
                 try {
                     PrintWriter salida = new PrintWriter(new FileWriter(archivo, true));
@@ -61,17 +62,14 @@ public class AccesoDatosImpl implements AccesoDatos {
                     salida.close();
                     System.out.println("Se ha escrito " + pelicula.getNombre() + " en el archivo " + nombreArchivo + " exitosamente");
                 } catch (FileNotFoundException ex) {
-                    ex.printStackTrace(System.out);
+                    throw new EscrituraDatosEx(ex.getMessage());
+//                    ex.printStackTrace(System.out);
                 } catch (IOException ex) {
-                    ex.printStackTrace(System.out);
+                    throw new EscrituraDatosEx(ex.getMessage());
+//                    ex.printStackTrace(System.out);
                 }
-
-            } else {
-                System.out.println("El archivo " + nombreArchivo + " no existe");
             }
-
         }
-
     }
 
     @Override
