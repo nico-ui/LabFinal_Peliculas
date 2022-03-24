@@ -19,15 +19,16 @@ public class AccesoDatosImpl implements AccesoDatos {
     }
 
     @Override
-    public List<String> listar(String nombre) {
-        List<String> peliculas = new ArrayList<>();
+    public List<Pelicula> listar(String nombre) {
+        List<Pelicula> peliculas = new ArrayList<>();
         File archivo = new File(nombre);
         try {
             var entrada = new BufferedReader(new FileReader(archivo));
             String lectura = entrada.readLine();
             while (lectura != null) {
+                Pelicula obj = new Pelicula(lectura);
 //                System.out.println("pelicula = " + lectura);
-                peliculas.add(lectura);
+                peliculas.add(obj);
                 lectura = entrada.readLine();
             }
             entrada.close();
@@ -42,33 +43,54 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public void escribir(Pelicula pelicula, String nombreArchivo, boolean anexar) {
-        File archivo = new File(nombreArchivo);
-        try {
-            PrintWriter salida = new PrintWriter(new FileWriter(archivo, true));
-            salida.println(pelicula);
-            salida.close();
-            System.out.println("Se ha escrito en el archivo " + nombreArchivo + "exitosamente");
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace(System.out);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
+
+        AccesoDatosImpl datos = new AccesoDatosImpl();
+        String respuesta = datos.buscar(nombreArchivo, pelicula.getNombre());
+        String existe = pelicula.getNombre() + " se encuentra en el archivo";
+        if (existe.equals(respuesta)) {
+            System.out.println(pelicula.getNombre() + " ya existe, no se puede escribir");
+        } else {
+
+            AccesoDatosImpl fichero = new AccesoDatosImpl();
+
+            if (fichero.existe(nombreArchivo) == true) {
+                File archivo = new File(nombreArchivo);
+                try {
+                    PrintWriter salida = new PrintWriter(new FileWriter(archivo, true));
+                    salida.println(pelicula.getNombre());
+                    salida.close();
+                    System.out.println("Se ha escrito " + pelicula.getNombre() + " en el archivo " + nombreArchivo + " exitosamente");
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace(System.out);
+                } catch (IOException ex) {
+                    ex.printStackTrace(System.out);
+                }
+
+            } else {
+                System.out.println("El archivo " + nombreArchivo + " no existe");
+            }
+
         }
+
     }
 
     @Override
     public String buscar(String nombreArchivo, String buscar) {
         File archivo = new File(nombreArchivo);
-        String existe = nombreArchivo + "Vacio";
+        String existe = nombreArchivo + "vacio";
         try {
+//            System.out.println("Inicio lectura del archivo");
             var entrada = new BufferedReader(new FileReader(archivo));
             String lectura = entrada.readLine();
+//            System.out.println("lectura = " + lectura);
             while (lectura != null) {
-                if (lectura == buscar) {
+                if (lectura.equals(buscar)) {
                     existe = buscar + " se encuentra en el archivo";
                 } else {
                     existe = buscar + " no se encuentra en el archivo";
                 }
                 lectura = entrada.readLine();
+//                System.out.println("lectura = " + lectura);
             }
             entrada.close();
             System.out.println("Fin lectura de archivo");
@@ -82,27 +104,35 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     @Override
     public void crear(String nombreArchivo) {
-        File archivo = new File(nombreArchivo);
-        try {
-            PrintWriter salida = new PrintWriter(archivo);
-            salida.close();
-            System.out.println("Se ha creado el archivo " + nombreArchivo);
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace(System.out);
+
+        AccesoDatosImpl fichero = new AccesoDatosImpl();
+
+        if (fichero.existe(nombreArchivo) == false) {
+            File archivo = new File(nombreArchivo);
+            try {
+                PrintWriter salida = new PrintWriter(archivo);
+                salida.close();
+                System.out.println("Se ha creado el archivo " + nombreArchivo);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace(System.out);
+            }
+        } else {
+            System.out.println("El archivo " + nombreArchivo + " ya existe");
         }
+
     }
 
     @Override
     public void borrar(String nombreArchivo) {
         File archivo = new File(nombreArchivo);
-        
+
         AccesoDatosImpl fichero = new AccesoDatosImpl();
 
         if (fichero.existe(nombreArchivo) == true) {
             archivo.delete();
-            System.out.println("El fichero ha sido borrado satisfactoriamente");
+            System.out.println("El archivo " + nombreArchivo + " ha sido borrado exitosamente");
         } else {
-            System.out.println("El fichero no puede ser borrado");
+            System.out.println("El archivo " + nombreArchivo + " no existe");
         }
 
     }
