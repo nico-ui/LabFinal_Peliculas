@@ -115,7 +115,7 @@ public class AccesoDatosImpl implements AccesoDatos {
                 ex.printStackTrace(System.out);
             }
         } else {
-            System.out.println("El archivo " + nombreArchivo + " ya existe");
+            System.out.println("El archivo " + nombreArchivo + " ya existe, no puede ser creado");
         }
 
     }
