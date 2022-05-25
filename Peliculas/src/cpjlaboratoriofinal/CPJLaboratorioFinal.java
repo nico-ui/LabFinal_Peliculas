@@ -23,9 +23,7 @@ public class CPJLaboratorioFinal {
     public static void main(String[] args) {
         Scanner leer = new Scanner(System.in);
         Integer opcion;
-        String pelicula;
-        String buscar;
-        String borrar;
+        String pelicula, confirmar;
         AccesoDatosImpl datos = new AccesoDatosImpl();;
         do {
             menu();
@@ -37,42 +35,56 @@ public class CPJLaboratorioFinal {
                     break;
                 case 2:
                     System.out.println("Ingresa el nombre de la pelicula a AGREGAR: ");
-                    pelicula = leer.nextLine();
-                    
+                    pelicula = leer.nextLine().trim();
                     System.out.println("¿Confirmar? S/N");
-                    String confirmar = leer.nextLine();
-                    
-                    if(confirmar.equals("S")){
+                    confirmar = leer.nextLine();
+                    if (confirmar.equals("S")) {
                         Pelicula peliculaObj = new Pelicula(pelicula);
-                    try {
-                        agregar(datos, peliculaObj, NOMBRE_ARCHIVO, true);
-                    } catch (EscrituraDatosEx ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                    }else{
+                        try {
+                            agregar(datos, peliculaObj, NOMBRE_ARCHIVO, true);
+                        } catch (EscrituraDatosEx ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    } else {
                         System.out.println("Opción invalida");
-                        System.out.println("No se ha podido agregar "+pelicula +" a "+ NOMBRE_ARCHIVO);
+                        System.out.println("No se ha podido agregar " + pelicula + " a " + NOMBRE_ARCHIVO);
                     }
-                    
-                    
+                    pelicula = "";
+                    confirmar = "";
                     break;
                 case 3:
                     listar(datos, NOMBRE_ARCHIVO);
                     break;
                 case 4:
                     System.out.println("Ingresa el nombre de la pelicula a BUSCAR: ");
-                    buscar = leer.nextLine();
-                    buscar(datos, NOMBRE_ARCHIVO, buscar);
+                    pelicula = leer.nextLine().trim();
+                    buscar(datos, NOMBRE_ARCHIVO, pelicula);
+                    pelicula = "";
                     break;
                 case 5:
-                    System.out.println("¿Deseas borrar "+ NOMBRE_ARCHIVO+"? S/N" );
-                    borrar = leer.nextLine();
-                    if(borrar.equals("S")){
-                        borrar(datos, NOMBRE_ARCHIVO);
-                    }else{
+                    System.out.println("¿Deseas borrar " + NOMBRE_ARCHIVO + "? S/N");
+                    confirmar = leer.nextLine();
+                    if (confirmar.equals("S")) {
+                        borrarCatalogo(datos, NOMBRE_ARCHIVO);
+                    } else {
                         System.out.println("Opción invalida");
-                        System.out.println("No se ha podido borrar "+ NOMBRE_ARCHIVO);
+                        System.out.println("No se ha podido borrar " + NOMBRE_ARCHIVO);
                     }
+                    confirmar = "";
+                    break;
+                case 6:
+                    System.out.println("Ingresa el nombre de la pelicula a BORRAR: ");
+                    pelicula = leer.nextLine().trim();
+                    System.out.println("¿Confirmar? S/N");
+                    confirmar = leer.nextLine();
+                    if (confirmar.equals("S")) {
+                        borrarPelicula(datos, NOMBRE_ARCHIVO, pelicula);
+                    } else {
+                        System.out.println("Opción invalida");
+                        System.out.println("No se ha podido borrar " + pelicula + " de " + NOMBRE_ARCHIVO);
+                    }
+                    pelicula = "";
+                    confirmar = "";
                     break;
                 case 0:
                     System.out.println("Hasta luego :-)");
@@ -81,7 +93,7 @@ public class CPJLaboratorioFinal {
                     System.out.println("Opción invalida, intente de nuevo");
             }
 
-        } while (opcion != 0);    
+        } while (opcion != 0);
     }
 
     public static void menu() {
@@ -92,7 +104,7 @@ public class CPJLaboratorioFinal {
         System.out.println("3. Listar Peliculas");
         System.out.println("4. Buscar pelicula");
         System.out.println("5. Borrar catalogo de peliculas");
-        //System.out.println("6. Borrar pelicula");//Agrego por accidente una pelicula
+        System.out.println("6. Borrar pelicula");
         System.out.println("0. Salir");
         System.out.println("Opción: ");
     }
@@ -112,19 +124,19 @@ public class CPJLaboratorioFinal {
 //        System.out.println("peliculas = " + peliculas);
         System.out.println("peliculas: ");
         for (int i = 0; i < peliculas.size(); i++) {
-            System.out.println(i+1 +". " + peliculas.get(i).getNombre());
+            System.out.println(i + 1 + ". " + peliculas.get(i).getNombre());
         }
     }
-    
-    public static void buscar(AccesoDatosImpl datos, String nombreArchivo, String buscar){
+
+    public static void buscar(AccesoDatosImpl datos, String nombreArchivo, String buscar) {
         String respuesta = datos.buscar(nombreArchivo, buscar);
         System.out.println(respuesta);
     }
 
-    public static void borrar(AccesoDatosImpl datos, String nombreArchivo){
+    public static void borrarCatalogo(AccesoDatosImpl datos, String nombreArchivo) {
         datos.borrar(nombreArchivo);
     }
-    
+
     public static void limpiarPantalla() {
         try {
             System.out.println("Presione una tecla para continuar...");
@@ -147,6 +159,10 @@ public class CPJLaboratorioFinal {
         } catch (Exception ex) {
             System.out.println("Error al limpiar pantalla: " + ex.getMessage());
         }
+    }
+
+    public static void borrarPelicula(AccesoDatosImpl datos, String nombreArchivo, String nombrePelicula) {
+        datos.borrarPelicula(nombreArchivo, nombrePelicula);
     }
 
     public static void limpiarAnt() {

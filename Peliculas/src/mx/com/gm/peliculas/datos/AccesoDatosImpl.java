@@ -135,4 +135,15 @@ public class AccesoDatosImpl implements AccesoDatos {
 
     }
 
+    @Override
+    public void borrarPelicula(String nombreArchivo, String nombrePelicula) {
+        AccesoDatosImpl obj = new AccesoDatosImpl();
+        String existe = obj.buscar(nombreArchivo, nombrePelicula);
+        if(existe.equals(nombrePelicula + " se encuentra en el archivo")){
+            //Borrar
+            System.out.println("aqui borramos");
+        }else{
+            System.out.println(nombrePelicula + " no se encuentra en el archivo");
+        }
+    }
 }

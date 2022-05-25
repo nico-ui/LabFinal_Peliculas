@@ -18,4 +18,6 @@ public interface AccesoDatos {
     
     public void borrar(String nombreArchivo);
     
+    public void borrarPelicula(String nombreArchivo, String nombrePelicula);
+    
 }
