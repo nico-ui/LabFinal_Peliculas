@@ -33,7 +33,7 @@ public class AccesoDatosImpl implements AccesoDatos {
                 lectura = entrada.readLine();
             }
             entrada.close();
-            System.out.println("Fin lectura de archivo");
+            System.out.println("Fin lectura del archivo");
         } catch (FileNotFoundException ex) {
             ex.printStackTrace(System.out);
         } catch (IOException ex) {
