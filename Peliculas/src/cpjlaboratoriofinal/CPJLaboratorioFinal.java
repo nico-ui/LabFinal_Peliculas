@@ -24,7 +24,7 @@ public class CPJLaboratorioFinal {
         Scanner leer = new Scanner(System.in);
         Integer opcion;
         String pelicula, confirmar;
-        AccesoDatosImpl datos = new AccesoDatosImpl();;
+        AccesoDatosImpl datos = new AccesoDatosImpl();
         do {
             menu();
             opcion = leer.nextInt();
@@ -36,7 +36,8 @@ public class CPJLaboratorioFinal {
                 case 2:
                     System.out.println("Ingresa el nombre de la pelicula a AGREGAR: ");
                     pelicula = leer.nextLine().trim();
-                    System.out.println("¿Confirmar? S/N");
+                    System.out.println("pelicula = " + pelicula);
+                    System.out.println("¿Confirmar? S/N");//Escape en caso de escribir mal
                     confirmar = leer.nextLine();
                     if (confirmar.equals("S")) {
                         Pelicula peliculaObj = new Pelicula(pelicula);
@@ -47,7 +48,7 @@ public class CPJLaboratorioFinal {
                         }
                     } else {
                         System.out.println("Opción invalida");
-                        System.out.println("No se ha podido agregar " + pelicula + " a " + NOMBRE_ARCHIVO);
+                        System.out.println("No se ha podido agregar " + pelicula + " en " + NOMBRE_ARCHIVO);
                     }
                     pelicula = "";
                     confirmar = "";
@@ -122,15 +123,19 @@ public class CPJLaboratorioFinal {
         peliculas = datos.listar(nombreArchivo);
 //        System.out.println("peliculas es una lista de objetos Pelicula");
 //        System.out.println("peliculas = " + peliculas);
-        System.out.println("peliculas: ");
-        for (int i = 0; i < peliculas.size(); i++) {
-            System.out.println(i + 1 + ". " + peliculas.get(i).getNombre());
+        if (peliculas.size() != 0) {
+            System.out.println("peliculas: ");
+            for (int i = 0; i < peliculas.size(); i++) {
+                System.out.println(i + 1 + ". " + peliculas.get(i).getNombre());
+            }
         }
+
     }
 
     public static void buscar(AccesoDatosImpl datos, String nombreArchivo, String buscar) {
         String respuesta = datos.buscar(nombreArchivo, buscar);
         System.out.println(respuesta);
+
     }
 
     public static void borrarCatalogo(AccesoDatosImpl datos, String nombreArchivo) {
