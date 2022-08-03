@@ -2,6 +2,8 @@ package mx.com.gm.peliculas.datos;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.com.gm.peliculas.domain.Pelicula;
 import mx.com.gm.peliculas.excepciones.EscrituraDatosEx;
 import mx.com.gm.peliculas.excepciones.LecturaDatosEx;
@@ -119,13 +121,12 @@ public class AccesoDatosImpl implements AccesoDatos {
             try {
                 PrintWriter salida = new PrintWriter(archivo);
                 salida.close();
-                System.out.println("Se ha creado el archivo " + nombreArchivo);
+                System.out.println("Se ha creado el archivo " + nombreArchivo + " exitosamente");
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace(System.out);
             }
         } else {
-            System.out.println(nombreArchivo + " ya existe");
-            System.out.println(nombreArchivo + " no pudo ser creado");
+            System.out.println(nombreArchivo + " ya existe, no pudo ser creado.");
         }
 
     }
@@ -140,7 +141,7 @@ public class AccesoDatosImpl implements AccesoDatos {
             archivo.delete();
             System.out.println("El archivo " + nombreArchivo + " ha sido borrado exitosamente");
         } else {
-            System.out.println(nombreArchivo + " no existe");
+            System.out.println(nombreArchivo + " no existe, no puede ser borrado.");
         }
 
     }
@@ -148,12 +149,57 @@ public class AccesoDatosImpl implements AccesoDatos {
     @Override
     public void borrarPelicula(String nombreArchivo, String nombrePelicula) {
         AccesoDatosImpl fichero = new AccesoDatosImpl();
-        String existe = fichero.buscar(nombreArchivo, nombrePelicula);
-        if (existe.equals(nombrePelicula + " se encuentra en el archivo")) {
-            //Borrar
-            System.out.println("aqui borramos");
+        String respuesta = "-";
+        String respuestaEsperada = nombrePelicula + "   --> existe";
+        if (fichero.existe(nombreArchivo) == true) {
+            respuesta = fichero.buscar(nombreArchivo, nombrePelicula);
+            if (respuesta.equals(respuestaEsperada)) {
+                String ficheroTemp = "ficheroTemporal.txt";
+                if (fichero.existe(ficheroTemp)) {
+                    fichero.borrar(ficheroTemp);
+                }
+                fichero.crear(ficheroTemp);
+                try {
+                    //lectura
+                    var entrada = new BufferedReader(new FileReader(nombreArchivo));
+                    String lectura = entrada.readLine();
+                    while (lectura != null) {
+                        if (lectura.equals(nombrePelicula)) {
+                            lectura = entrada.readLine();
+                        }
+                        Pelicula pelicula = new Pelicula(lectura);
+                        fichero.escribir(pelicula, ficheroTemp, true);
+                        lectura = entrada.readLine();
+                    }
+                    entrada.close();
+                    fichero.borrar(nombreArchivo);
+                    fichero.crear(nombreArchivo);
+                    //Lectura
+                    entrada = new BufferedReader(new FileReader(ficheroTemp));
+                    lectura = entrada.readLine();
+                    while (lectura != null) {
+                        Pelicula pelicula = new Pelicula(lectura);
+                        fichero.escribir(pelicula, nombreArchivo, true);
+                        lectura = entrada.readLine();
+                    }
+                    entrada.close();
+                    fichero.borrar(ficheroTemp);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(AccesoDatosImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(AccesoDatosImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (EscrituraDatosEx ex) {
+                    Logger.getLogger(AccesoDatosImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                System.out.println(nombrePelicula + " no existe en el archivo " + nombreArchivo + " no puede ser borrado.");
+            }
         } else {
-            System.out.println(nombrePelicula + " no se encuentra en el archivo");
+            System.out.println(nombreArchivo + " no existe.");
         }
+    }
+    
+    public void copiadoArchivos(String nombreArchivoOrigen, String nombreArchivoDestino){
+        
     }
 }

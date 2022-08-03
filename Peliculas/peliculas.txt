@@ -1,3 +1,4 @@
 nemo
-batman
-pinocho
+Pinocho
+flash
+Avengers
