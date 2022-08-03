@@ -199,7 +199,4 @@ public class AccesoDatosImpl implements AccesoDatos {
         }
     }
     
-    public void copiadoArchivos(String nombreArchivoOrigen, String nombreArchivoDestino){
-        
-    }
 }
